@@ -6,6 +6,7 @@ import { UserLoginInputDto } from './dtos/user.login.dto'
 import { JwtAuthGuard } from './jwt/jwt-auth.guard'
 import { User } from '../common/decorators/user.decorator'
 import { UserEntity } from './entities/user.entity'
+import { UserUpdateInputDto } from './dtos/user.update.dto'
 
 @Controller('auth')
 @ApiTags('auth')
@@ -38,5 +39,19 @@ export class AuthController {
   @ApiBearerAuth('access-token')
   async profile(@User() user: UserEntity) {
     return user
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('update')
+  @ApiOperation({
+    summary: 'Update user data',
+  })
+  @ApiBody({ type: UserUpdateInputDto })
+  @ApiBearerAuth('access-token')
+  async update(
+    @User() user: UserEntity,
+    @Body() userUpdateInputDto: UserUpdateInputDto,
+  ) {
+    return await this.authService.update(user.pk, userUpdateInputDto)
   }
 }

@@ -6,6 +6,7 @@ import { UserRegisterInputDto } from './dtos/user.register.dto'
 import { UserLoginInputDto } from './dtos/user.login.dto'
 import { JwtService } from '@nestjs/jwt'
 import { JwtPayloadType } from './jwt/jwt.payload.type'
+import { UserUpdateInputDto } from './dtos/user.update.dto'
 
 @Injectable()
 export class AuthService {
@@ -146,5 +147,35 @@ export class AuthService {
         pk,
       },
     })
+  }
+
+  async update(pk: number, { nickname, password }: UserUpdateInputDto) {
+    try {
+      const user = await this.userEntity.findOne({
+        where: {
+          pk,
+        },
+      })
+      if (!user) {
+        return {
+          access: false,
+          message: 'Not found this user',
+        }
+      }
+      if (password) {
+        user.password = password
+      }
+      if (nickname) {
+        user.nickname = nickname
+      }
+      await this.userEntity.save(user)
+      return {
+        access: true,
+        message: 'Success update profile',
+        user,
+      }
+    } catch (e) {
+      throw new InternalServerErrorException(e.message)
+    }
   }
 }
