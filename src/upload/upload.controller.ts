@@ -6,11 +6,11 @@ import { multerOptions } from '../common/utils/multer.options'
 @Controller('upload')
 @ApiTags('upload')
 export class UploadController {
-  @Post('single')
+  @Post('avatar')
   @UseInterceptors(FileInterceptor('image', multerOptions('images')))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({
-    summary: 'To upload a single image file',
+    summary: 'To upload a single avatar image file',
   })
   @ApiBody({
     schema: {
@@ -23,7 +23,9 @@ export class UploadController {
       },
     },
   })
-  uploadImage(@UploadedFile() image: Express.Multer.File) {
-    console.log(image)
+  uploadAvatarImage(@UploadedFile() image: Express.Multer.File) {
+    return {
+      image: `http://localhost:${process.env.PORT}/media/images/${image.filename}`,
+    }
   }
 }
