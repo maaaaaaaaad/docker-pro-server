@@ -62,7 +62,7 @@ export class UserEntity extends CoreEntity {
     description: 'User avatar image',
     required: false,
     nullable: true,
-    example: 'Avatar image url',
+    example: null,
     type: String,
   })
   avatarImage?: string
