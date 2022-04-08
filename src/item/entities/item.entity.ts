@@ -22,17 +22,17 @@ export class ItemEntity extends CoreEntity {
   })
   subject: string
 
-  @Column({ name: 'COVER_IMAGE', nullable: true, type: String })
+  @Column({ name: 'COVER_IMAGE', nullable: false, type: String })
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
     description: 'Item cover image',
     type: String,
-    nullable: true,
-    required: false,
+    nullable: false,
+    required: true,
     format: 'binary',
   })
-  coverImage?: string
+  coverImage: string
 
   @Column({ name: 'DESCRIPTION', nullable: false, type: String })
   @IsString()

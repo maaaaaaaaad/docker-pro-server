@@ -5,6 +5,7 @@ import { CategoryValues } from '../entities/category.entity'
 export class ItemRegisterInputDto extends PickType(ItemEntity, [
   'subject',
   'description',
+  'coverImage',
   'price',
 ]) {
   @ApiProperty({
@@ -12,7 +13,7 @@ export class ItemRegisterInputDto extends PickType(ItemEntity, [
     enum: CategoryValues,
     nullable: false,
     required: true,
-    example: `${CategoryValues.BUY} || ${CategoryValues.SELL}`,
+    examples: [CategoryValues.BUY, CategoryValues.SELL],
   })
   categoryValue: CategoryValues
 }

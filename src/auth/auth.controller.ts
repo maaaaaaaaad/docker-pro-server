@@ -1,7 +1,13 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { UserRegisterInputDto } from './dtos/user.register.dto'
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger'
 import { UserLoginInputDto } from './dtos/user.login.dto'
 import { JwtAuthGuard } from './jwt/jwt-auth.guard'
 import { User } from '../common/decorators/user.decorator'
@@ -17,6 +23,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Register user account',
   })
+  @ApiConsumes('application/x-www-form-urlencoded')
   @ApiBody({ type: UserRegisterInputDto })
   async register(@Body() userRegisterInputDto: UserRegisterInputDto) {
     return await this.authService.register(userRegisterInputDto)
@@ -26,6 +33,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Login user account',
   })
+  @ApiConsumes('application/x-www-form-urlencoded')
   @ApiBody({ type: UserLoginInputDto })
   async login(@Body() userLoginInputDto: UserLoginInputDto) {
     return await this.authService.login(userLoginInputDto)
@@ -43,6 +51,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('update')
+  @ApiConsumes('application/x-www-form-urlencoded')
   @ApiOperation({
     summary: 'Update user data',
   })

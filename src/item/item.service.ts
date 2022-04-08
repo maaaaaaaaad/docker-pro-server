@@ -17,12 +17,19 @@ export class ItemService {
 
   async register(
     owner: UserEntity,
-    { categoryValue, subject, description, price }: ItemRegisterInputDto,
+    {
+      categoryValue,
+      subject,
+      description,
+      coverImage,
+      price,
+    }: ItemRegisterInputDto,
   ) {
     try {
       const item = await this.itemEntity.create({
         subject,
         description,
+        coverImage,
         price,
       })
       item.owner = owner

@@ -24,7 +24,6 @@ export class UserEntity extends CoreEntity {
   @IsEmail()
   @IsNotEmpty()
   @ApiProperty({
-    description: 'User email',
     nullable: false,
     required: true,
     example: 'thepro@gmail.com',
@@ -36,11 +35,11 @@ export class UserEntity extends CoreEntity {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    description: 'User password',
     nullable: false,
     required: true,
     example: 'abcabc123123',
     type: String,
+    format: 'password',
   })
   password: string
 
@@ -48,7 +47,6 @@ export class UserEntity extends CoreEntity {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    description: 'User nickname',
     nullable: false,
     required: true,
     example: 'mynickname',
@@ -60,11 +58,10 @@ export class UserEntity extends CoreEntity {
   @IsString()
   @IsOptional()
   @ApiProperty({
-    description: 'User avatar image',
     required: false,
     nullable: true,
-    example: 'Social image url || null',
     type: String,
+    default: null,
   })
   avatarImage?: string
 
@@ -72,11 +69,9 @@ export class UserEntity extends CoreEntity {
   @IsEnum(Social)
   @IsOptional()
   @ApiProperty({
-    description: 'Check social user',
     nullable: true,
     required: false,
     enum: Social,
-    example: 'GOOGLE || KAKAO || NAVER || null',
   })
   social?: Social
 
