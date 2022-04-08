@@ -80,7 +80,7 @@ export class UserEntity extends CoreEntity {
   })
   social?: Social
 
-  @OneToMany(() => ItemEntity, (item) => item.user, {
+  @OneToMany(() => ItemEntity, (item) => item.owner, {
     cascade: true,
   })
   items: ItemEntity[]
