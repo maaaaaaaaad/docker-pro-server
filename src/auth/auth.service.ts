@@ -196,7 +196,7 @@ export class AuthService {
     return {
       access: true,
       message: 'Success update avatar image',
-      location,
+      user,
     }
   }
 }

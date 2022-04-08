@@ -5,7 +5,8 @@ import * as ormconfig from './typeorm.config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppLoggerMiddleware } from './common/middlewares/logger.middleware'
 import { AuthModule } from './auth/auth.module'
-import { UploadModule } from './upload/upload.module';
+import { UploadModule } from './upload/upload.module'
+import { ItemModule } from './item/item.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UploadModule } from './upload/upload.module';
     TypeOrmModule.forRoot(ormconfig),
     AuthModule,
     UploadModule,
+    ItemModule,
   ],
   controllers: [],
   providers: [],

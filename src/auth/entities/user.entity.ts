@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm'
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm'
 import { CoreEntity } from '../../common/entities/core.entity'
 import {
   IsEmail,
@@ -10,6 +10,7 @@ import {
 import * as bcrypt from 'bcrypt'
 import { InternalServerErrorException } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
+import { ItemEntity } from '../../item/entities/item.entity'
 
 export enum Social {
   GOOGLE = 'GOOGLE',
@@ -62,7 +63,7 @@ export class UserEntity extends CoreEntity {
     description: 'User avatar image',
     required: false,
     nullable: true,
-    example: null,
+    example: 'Social image url || null',
     type: String,
   })
   avatarImage?: string
@@ -74,10 +75,15 @@ export class UserEntity extends CoreEntity {
     description: 'Check social user',
     nullable: true,
     required: false,
-    default: null,
     enum: Social,
+    example: 'GOOGLE || KAKAO || NAVER || null',
   })
   social?: Social
+
+  @OneToMany(() => ItemEntity, (item) => item.user, {
+    cascade: true,
+  })
+  items: ItemEntity[]
 
   @BeforeInsert()
   @BeforeUpdate()
