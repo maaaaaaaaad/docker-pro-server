@@ -18,7 +18,7 @@ export enum Social {
   NAVER = 'NAVER',
 }
 
-@Entity({ name: 'User' })
+@Entity({ name: 'USER' })
 export class UserEntity extends CoreEntity {
   @Column({ name: 'EMAIL', nullable: false, unique: true })
   @IsEmail()
