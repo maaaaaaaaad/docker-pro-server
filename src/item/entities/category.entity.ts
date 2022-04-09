@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm'
 import { CoreEntity } from '../../common/entities/core.entity'
 import { IsEnum } from 'class-validator'
 import { ItemEntity } from './item.entity'
@@ -15,5 +15,6 @@ export class CategoryEntity extends CoreEntity {
   value: CategoryValues
 
   @OneToMany(() => ItemEntity, (item) => item.category)
+  @JoinColumn()
   items: ItemEntity[]
 }

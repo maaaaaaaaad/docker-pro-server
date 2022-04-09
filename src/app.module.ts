@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppLoggerMiddleware } from './common/middlewares/logger.middleware'
 import { AuthModule } from './auth/auth.module'
 import { UploadModule } from './upload/upload.module'
-import { ItemModule } from './item/item.module';
+import { ItemModule } from './item/item.module'
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { ItemModule } from './item/item.module';
           : '.production.env',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
-          .valid('development', 'production', 'test', 'provision')
+          .valid('development', 'production')
           .default('development'),
         PORT: Joi.number().required(),
         POSTGRES_HOST: Joi.string().required(),

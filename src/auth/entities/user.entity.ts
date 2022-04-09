@@ -54,16 +54,15 @@ export class UserEntity extends CoreEntity {
   })
   nickname: string
 
-  @Column({ name: 'AVATAR_IMAGE', nullable: true })
+  @Column({ name: 'AVATAR_IMAGE', nullable: true, default: null })
   @IsString()
   @IsOptional()
   @ApiProperty({
     required: false,
     nullable: true,
-    type: String,
-    default: null,
+    type: String || null,
   })
-  avatarImage?: string
+  avatarImage?: string | null
 
   @Column({ name: 'SOCIAL', nullable: true, enum: Social, default: null })
   @IsEnum(Social)
