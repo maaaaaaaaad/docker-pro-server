@@ -56,9 +56,7 @@ export class ItemService {
 
   async categories(): Promise<CategoriesGetOutputDto> {
     try {
-      const categories = await this.categoryEntity.find({
-        relations: ['items'],
-      })
+      const categories = await this.categoryEntity.find()
       return {
         access: true,
         message: 'Success',
