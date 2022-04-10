@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -14,6 +15,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
 import { User } from '../common/decorators/user.decorator'
@@ -25,6 +27,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express'
 import { multerOptions } from '../common/utils/multer.options'
 import { CategoriesGetOutputDto } from './dtos/categories.get.dto'
+import { ItemsGetInputDto } from './dtos/items.get.dto'
 
 @Controller('item')
 @ApiTags('item')
@@ -56,7 +59,23 @@ export class ItemController {
     return await this.itemService.register(user, itemRegisterInputDto)
   }
 
-  @Get()
+  @Get('all')
+  @ApiOperation({
+    summary: 'Get items',
+  })
+  @ApiQuery({
+    name: 'page',
+    description: 'Enter the desired number of pages',
+  })
+  @ApiQuery({
+    name: 'size',
+    description: 'Enter the desired number of item count',
+  })
+  async items(@Query() itemsGetInputDto: ItemsGetInputDto) {
+    return await this.itemService.items(itemsGetInputDto)
+  }
+
+  @Get('categories')
   @ApiOperation({
     summary: 'Get categories',
   })

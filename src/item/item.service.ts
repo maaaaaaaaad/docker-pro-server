@@ -9,6 +9,7 @@ import {
 } from './dtos/item.register.dto'
 import { UserEntity } from '../auth/entities/user.entity'
 import { CategoriesGetOutputDto } from './dtos/categories.get.dto'
+import { ItemsGetInputDto } from './dtos/items.get.dto'
 
 @Injectable()
 export class ItemService {
@@ -48,6 +49,27 @@ export class ItemService {
       return {
         access: true,
         message: 'Success register item',
+      }
+    } catch (e) {
+      throw new InternalServerErrorException(e.message)
+    }
+  }
+
+  async items({ page, size }: ItemsGetInputDto) {
+    try {
+      const [items, itemCount] = await this.itemEntity.findAndCount({
+        take: size,
+        skip: (page - 1) * size,
+        order: {
+          createAt: 'ASC',
+        },
+      })
+      return {
+        access: true,
+        message: 'Success',
+        items,
+        pageCount: Math.ceil(itemCount / size),
+        itemCount,
       }
     } catch (e) {
       throw new InternalServerErrorException(e.message)
