@@ -7,7 +7,10 @@ import { ApiProperty } from '@nestjs/swagger'
 
 @Entity({ name: 'ITEM' })
 export class ItemEntity extends CoreEntity {
-  @ManyToOne(() => CategoryEntity, (category) => category.items)
+  @ManyToOne(() => CategoryEntity, (category) => category.items, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
   category: CategoryEntity
 
   @Column({ name: 'SUBJECT', nullable: false, type: String })

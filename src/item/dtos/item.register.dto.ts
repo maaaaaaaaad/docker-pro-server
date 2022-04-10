@@ -1,6 +1,7 @@
 import { ApiProperty, PickType } from '@nestjs/swagger'
 import { ItemEntity } from '../entities/item.entity'
 import { CategoryValues } from '../entities/category.entity'
+import { CoreOutputDto } from '../../common/dtos/core.output.dto'
 
 export class ItemRegisterInputDto extends PickType(ItemEntity, [
   'subject',
@@ -17,3 +18,5 @@ export class ItemRegisterInputDto extends PickType(ItemEntity, [
   })
   categoryValue: CategoryValues
 }
+
+export type ItemRegisterOutputDto = CoreOutputDto

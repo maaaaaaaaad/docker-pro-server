@@ -3,8 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { ItemEntity } from './entities/item.entity'
 import { Repository } from 'typeorm'
 import { CategoryEntity } from './entities/category.entity'
-import { ItemRegisterInputDto } from './dtos/item.register.dto'
+import {
+  ItemRegisterInputDto,
+  ItemRegisterOutputDto,
+} from './dtos/item.register.dto'
 import { UserEntity } from '../auth/entities/user.entity'
+import { CategoriesGetOutputDto } from './dtos/categories.get.dto'
 
 @Injectable()
 export class ItemService {
@@ -24,7 +28,7 @@ export class ItemService {
       coverImage,
       price,
     }: ItemRegisterInputDto,
-  ) {
+  ): Promise<ItemRegisterOutputDto> {
     try {
       const item = await this.itemEntity.create({
         subject,
@@ -44,6 +48,21 @@ export class ItemService {
       return {
         access: true,
         message: 'Success register item',
+      }
+    } catch (e) {
+      throw new InternalServerErrorException(e.message)
+    }
+  }
+
+  async categories(): Promise<CategoriesGetOutputDto> {
+    try {
+      const categories = await this.categoryEntity.find({
+        relations: ['items'],
+      })
+      return {
+        access: true,
+        message: 'Success',
+        categories,
       }
     } catch (e) {
       throw new InternalServerErrorException(e.message)

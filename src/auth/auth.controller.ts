@@ -1,6 +1,9 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { UserRegisterInputDto } from './dtos/user.register.dto'
+import {
+  UserRegisterInputDto,
+  UserRegisterOutputDto,
+} from './dtos/user.register.dto'
 import {
   ApiBearerAuth,
   ApiBody,
@@ -12,7 +15,7 @@ import { UserLoginInputDto } from './dtos/user.login.dto'
 import { JwtAuthGuard } from './jwt/jwt-auth.guard'
 import { User } from '../common/decorators/user.decorator'
 import { UserEntity } from './entities/user.entity'
-import { UserUpdateInputDto } from './dtos/user.update.dto'
+import { UserUpdateInputDto, UserUpdateOutputDto } from './dtos/user.update.dto'
 
 @Controller('auth')
 @ApiTags('auth')
@@ -25,7 +28,9 @@ export class AuthController {
   })
   @ApiConsumes('application/x-www-form-urlencoded')
   @ApiBody({ type: UserRegisterInputDto })
-  async register(@Body() userRegisterInputDto: UserRegisterInputDto) {
+  async register(
+    @Body() userRegisterInputDto: UserRegisterInputDto,
+  ): Promise<UserRegisterOutputDto> {
     return await this.authService.register(userRegisterInputDto)
   }
 
@@ -35,7 +40,9 @@ export class AuthController {
   })
   @ApiConsumes('application/x-www-form-urlencoded')
   @ApiBody({ type: UserLoginInputDto })
-  async login(@Body() userLoginInputDto: UserLoginInputDto) {
+  async login(
+    @Body() userLoginInputDto: UserLoginInputDto,
+  ): Promise<UserRegisterOutputDto> {
     return await this.authService.login(userLoginInputDto)
   }
 
@@ -60,7 +67,7 @@ export class AuthController {
   async update(
     @User() user: UserEntity,
     @Body() userUpdateInputDto: UserUpdateInputDto,
-  ) {
+  ): Promise<UserUpdateOutputDto> {
     return await this.authService.update(user.pk, userUpdateInputDto)
   }
 }

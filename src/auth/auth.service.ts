@@ -2,11 +2,15 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserEntity } from './entities/user.entity'
 import { Repository } from 'typeorm'
-import { UserRegisterInputDto } from './dtos/user.register.dto'
-import { UserLoginInputDto } from './dtos/user.login.dto'
+import {
+  UserRegisterInputDto,
+  UserRegisterOutputDto,
+} from './dtos/user.register.dto'
+import { UserLoginInputDto, UserLoginOutputDto } from './dtos/user.login.dto'
 import { JwtService } from '@nestjs/jwt'
 import { JwtPayloadType } from './jwt/jwt.payload.type'
-import { UserUpdateInputDto } from './dtos/user.update.dto'
+import { UserUpdateInputDto, UserUpdateOutputDto } from './dtos/user.update.dto'
+import { CoreOutputDto } from '../common/dtos/core.output.dto'
 
 @Injectable()
 export class AuthService {
@@ -39,7 +43,7 @@ export class AuthService {
     nickname,
     avatarImage,
     social,
-  }: UserRegisterInputDto) {
+  }: UserRegisterInputDto): Promise<UserRegisterOutputDto> {
     try {
       if (!social) {
         if (
@@ -57,12 +61,12 @@ export class AuthService {
           )
           return {
             access: true,
-            success: 'Success register user account',
+            message: 'Success register user account',
           }
         }
         return {
           access: false,
-          error: 'Please you check email and nickname',
+          message: 'Please you check email and nickname',
         }
       } else if (social) {
         let payload: JwtPayloadType
@@ -84,7 +88,7 @@ export class AuthService {
           payload = { email: socialUser.email, pk: socialUser.pk }
           return {
             access: true,
-            success: 'Success register social user',
+            message: 'Success register social user',
             token: this.jwtService.sign(payload),
           }
         }
@@ -96,7 +100,7 @@ export class AuthService {
         payload = { email: socialUser.email, pk: socialUser.pk }
         return {
           access: true,
-          success: 'Success login social user',
+          message: 'Success login social user',
           token: this.jwtService.sign(payload),
         }
       }
@@ -105,7 +109,10 @@ export class AuthService {
     }
   }
 
-  async login({ email, password }: UserLoginInputDto) {
+  async login({
+    email,
+    password,
+  }: UserLoginInputDto): Promise<UserLoginOutputDto> {
     try {
       const user = await this.userEntity.findOne({
         where: {
@@ -116,14 +123,14 @@ export class AuthService {
       if (!user) {
         return {
           access: false,
-          error: 'Not found this user',
+          message: 'Not found this user',
         }
       } else if (user) {
         const confirmPassword = await user.confirmPassword(password)
         if (!confirmPassword) {
           return {
             access: false,
-            error: 'No match password',
+            message: 'No match password',
           }
         }
       }
@@ -133,7 +140,7 @@ export class AuthService {
       }
       return {
         access: true,
-        success: 'Success login',
+        message: 'Success login',
         token: this.jwtService.sign(payload),
       }
     } catch (e) {
@@ -149,7 +156,10 @@ export class AuthService {
     })
   }
 
-  async update(pk: number, { nickname, password }: UserUpdateInputDto) {
+  async update(
+    pk: number,
+    { nickname, password }: UserUpdateInputDto,
+  ): Promise<UserUpdateOutputDto> {
     try {
       const user = await this.userEntity.findOne({
         where: {
