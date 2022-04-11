@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Patch, Post, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import {
   UserRegisterInputDto,
@@ -57,7 +57,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('update')
+  @Patch()
   @ApiConsumes('application/x-www-form-urlencoded')
   @ApiOperation({
     summary: 'Update user data',

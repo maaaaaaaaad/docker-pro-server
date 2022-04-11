@@ -10,6 +10,7 @@ import {
 import { UserEntity } from '../auth/entities/user.entity'
 import { CategoriesGetOutputDto } from './dtos/categories.get.dto'
 import { ItemsGetInputDto } from './dtos/items.get.dto'
+import { ItemUpdateInputDto } from './dtos/item.update.dto'
 
 @Injectable()
 export class ItemService {
@@ -71,6 +72,24 @@ export class ItemService {
         pageCount: Math.ceil(itemCount / size),
         itemCount,
       }
+    } catch (e) {
+      throw new InternalServerErrorException(e.message)
+    }
+  }
+
+  async update(
+    ownerPk: number,
+    pk: number,
+    itemUpdateInputDto: ItemUpdateInputDto,
+  ) {
+    try {
+      console.log(pk)
+      const item = await this.itemEntity.findOne({
+        where: {
+          pk,
+        },
+      })
+      console.log(item)
     } catch (e) {
       throw new InternalServerErrorException(e.message)
     }

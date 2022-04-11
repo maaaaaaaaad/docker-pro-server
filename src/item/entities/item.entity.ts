@@ -63,6 +63,7 @@ export class ItemEntity extends CoreEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.items, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   owner: UserEntity
 }

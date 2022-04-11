@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  Patch,
   Post,
   Query,
   UploadedFile,
@@ -15,6 +17,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
@@ -28,6 +31,7 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { multerOptions } from '../common/utils/multer.options'
 import { CategoriesGetOutputDto } from './dtos/categories.get.dto'
 import { ItemsGetInputDto } from './dtos/items.get.dto'
+import { ItemUpdateInputDto } from './dtos/item.update.dto'
 
 @Controller('item')
 @ApiTags('item')
@@ -59,17 +63,32 @@ export class ItemController {
     return await this.itemService.register(user, itemRegisterInputDto)
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Patch()
+  @ApiConsumes('multipart/form-data')
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: 'Update user item',
+  })
+  @ApiQuery({
+    name: 'pk',
+    type: Number,
+    required: true,
+  })
+  @ApiBody({
+    type: ItemUpdateInputDto,
+  })
+  async update(
+    @User() user: UserEntity,
+    @Query('pk') pk: number,
+    @Body() itemUpdateInputDto: ItemUpdateInputDto,
+  ) {
+    await this.itemService.update(user.pk, pk, itemUpdateInputDto)
+  }
+
   @Get('all')
   @ApiOperation({
     summary: 'Get items',
-  })
-  @ApiQuery({
-    name: 'page',
-    description: 'Enter the desired number of pages',
-  })
-  @ApiQuery({
-    name: 'size',
-    description: 'Enter the desired number of item count',
   })
   async items(@Query() itemsGetInputDto: ItemsGetInputDto) {
     return await this.itemService.items(itemsGetInputDto)
