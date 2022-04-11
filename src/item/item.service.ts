@@ -11,6 +11,7 @@ import { UserEntity } from '../auth/entities/user.entity'
 import { CategoriesGetOutputDto } from './dtos/categories.get.dto'
 import { ItemsGetInputDto } from './dtos/items.get.dto'
 import { ItemUpdateInputDto } from './dtos/item.update.dto'
+import { ItemDeleteInputDto } from './dtos/item.delete.dto'
 
 @Injectable()
 export class ItemService {
@@ -89,6 +90,35 @@ export class ItemService {
         access: true,
         message: 'Success',
         item,
+      }
+    } catch (e) {
+      throw new InternalServerErrorException(e.message)
+    }
+  }
+
+  async delete(pk: ItemDeleteInputDto, user: UserEntity) {
+    try {
+      const item = await this.itemEntity.findOne({
+        where: {
+          pk,
+        },
+      })
+      if (!item) {
+        return {
+          access: false,
+          message: 'Not found this item',
+        }
+      }
+      if (item.owner.pk !== user.pk) {
+        return {
+          access: false,
+          message: 'Not match owner pk',
+        }
+      }
+      await this.itemEntity.delete(pk)
+      return {
+        access: true,
+        message: `Success delete item: ${item.subject}`,
       }
     } catch (e) {
       throw new InternalServerErrorException(e.message)

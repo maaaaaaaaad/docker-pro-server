@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Patch,
   Post,
@@ -16,6 +17,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
 import { User } from '../common/decorators/user.decorator'
@@ -29,6 +31,7 @@ import { multerOptions } from '../common/utils/multer.options'
 import { CategoriesGetOutputDto } from './dtos/categories.get.dto'
 import { ItemsGetInputDto } from './dtos/items.get.dto'
 import { ItemUpdateInputDto } from './dtos/item.update.dto'
+import { ItemDeleteInputDto } from './dtos/item.delete.dto'
 
 @Controller('item')
 @ApiTags('item')
@@ -36,7 +39,7 @@ export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Post('register')
+  @Post()
   @UseInterceptors(
     FileInterceptor('coverImage', multerOptions('item-cover-image')),
   )
@@ -71,6 +74,19 @@ export class ItemController {
     @User() owner: UserEntity,
   ) {
     return await this.itemService.update(itemUpdateInputDto, owner)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiOperation({ summary: 'Delete user item' })
+  @ApiBearerAuth('access-token')
+  @ApiQuery({ name: 'pk', type: ItemDeleteInputDto, required: true })
+  async delete(
+    @Query('pk') itemDeleteInputDto: ItemDeleteInputDto,
+    @User() user: UserEntity,
+  ) {
+    return await this.itemService.delete(itemDeleteInputDto, user)
   }
 
   @Get('all')
