@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Patch,
   Post,
   Query,
@@ -17,8 +16,6 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
-  ApiParam,
-  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
 import { User } from '../common/decorators/user.decorator'
@@ -65,25 +62,15 @@ export class ItemController {
 
   @UseGuards(JwtAuthGuard)
   @Patch()
-  @ApiConsumes('multipart/form-data')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiOperation({ summary: 'Update user item' })
+  @ApiBody({ type: ItemUpdateInputDto })
   @ApiBearerAuth('access-token')
-  @ApiOperation({
-    summary: 'Update user item',
-  })
-  @ApiQuery({
-    name: 'pk',
-    type: Number,
-    required: true,
-  })
-  @ApiBody({
-    type: ItemUpdateInputDto,
-  })
   async update(
-    @User() user: UserEntity,
-    @Query('pk') pk: number,
     @Body() itemUpdateInputDto: ItemUpdateInputDto,
+    @User() owner: UserEntity,
   ) {
-    await this.itemService.update(user.pk, pk, itemUpdateInputDto)
+    return await this.itemService.update(itemUpdateInputDto, owner)
   }
 
   @Get('all')

@@ -13,7 +13,7 @@ export class ItemEntity extends CoreEntity {
   })
   category: CategoryEntity
 
-  @Column({ name: 'SUBJECT', nullable: false, type: String })
+  @Column({ name: 'SUBJECT', nullable: false })
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
@@ -25,7 +25,7 @@ export class ItemEntity extends CoreEntity {
   })
   subject: string
 
-  @Column({ name: 'COVER_IMAGE', nullable: false, type: String })
+  @Column({ name: 'COVER_IMAGE', nullable: false })
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
@@ -37,26 +37,26 @@ export class ItemEntity extends CoreEntity {
   })
   coverImage: string
 
-  @Column({ name: 'DESCRIPTION', nullable: false, type: String })
+  @Column({ name: 'DESCRIPTION', nullable: false })
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
     description: 'Item description',
     type: String,
     nullable: false,
+    example: 'This is description',
     required: true,
-    example: 'This book is...',
   })
   description: string
 
-  @Column({ name: 'PRICE', nullable: false, type: Number })
+  @Column({ name: 'PRICE', nullable: false })
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty({
     description: 'Item price',
     type: Number,
-    example: 5000,
     nullable: false,
+    example: 5000,
     required: true,
   })
   price: number

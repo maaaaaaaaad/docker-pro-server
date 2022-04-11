@@ -56,13 +56,52 @@ export class ItemService {
     }
   }
 
+  async update(
+    { pk, description, price }: ItemUpdateInputDto,
+    owner: UserEntity,
+  ) {
+    try {
+      const item = await this.itemEntity.findOne({
+        where: {
+          pk,
+        },
+      })
+      if (!item) {
+        return {
+          access: false,
+          message: 'Not found this item',
+        }
+      }
+      if (item.owner.pk !== owner.pk) {
+        return {
+          access: false,
+          message: 'Not match owner pk',
+        }
+      }
+      if (description) {
+        item.description = description
+      }
+      if (price) {
+        item.price = price
+      }
+      await this.itemEntity.save(item)
+      return {
+        access: true,
+        message: 'Success',
+        item,
+      }
+    } catch (e) {
+      throw new InternalServerErrorException(e.message)
+    }
+  }
+
   async items({ page, size }: ItemsGetInputDto) {
     try {
       const [items, itemCount] = await this.itemEntity.findAndCount({
         take: size,
         skip: (page - 1) * size,
         order: {
-          createAt: 'ASC',
+          createAt: 'DESC',
         },
       })
       return {
@@ -72,24 +111,6 @@ export class ItemService {
         pageCount: Math.ceil(itemCount / size),
         itemCount,
       }
-    } catch (e) {
-      throw new InternalServerErrorException(e.message)
-    }
-  }
-
-  async update(
-    ownerPk: number,
-    pk: number,
-    itemUpdateInputDto: ItemUpdateInputDto,
-  ) {
-    try {
-      console.log(pk)
-      const item = await this.itemEntity.findOne({
-        where: {
-          pk,
-        },
-      })
-      console.log(item)
     } catch (e) {
       throw new InternalServerErrorException(e.message)
     }
