@@ -182,4 +182,35 @@ export class ItemService {
       throw new InternalServerErrorException(e.message)
     }
   }
+
+  async uploadItemCoverImage(owner: UserEntity, pk: number, location: string) {
+    try {
+      const item = await this.itemEntity.findOne({
+        where: {
+          pk,
+        },
+      })
+      if (!item) {
+        return {
+          access: false,
+          message: 'Not found this item',
+        }
+      }
+      if (item.owner.pk !== owner.pk) {
+        return {
+          access: false,
+          message: 'Not match owner primary key',
+        }
+      }
+      item.coverImage = location
+      await this.itemEntity.save(item)
+      return {
+        access: true,
+        message: 'Success',
+        location,
+      }
+    } catch (e) {
+      throw new InternalServerErrorException(e.message)
+    }
+  }
 }
