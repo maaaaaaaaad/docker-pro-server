@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt'
 import { InternalServerErrorException } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
 import { ItemEntity } from '../../item/entities/item.entity'
+import { CommentEntity } from '../../comment/entities/comment.entity'
 
 export enum Social {
   GOOGLE = 'GOOGLE',
@@ -78,6 +79,9 @@ export class UserEntity extends CoreEntity {
     cascade: true,
   })
   items: ItemEntity[]
+
+  @OneToMany(() => CommentEntity, (comment) => comment.owner)
+  comments: CommentEntity[]
 
   @BeforeInsert()
   @BeforeUpdate()

@@ -1,9 +1,10 @@
-import { Column, Entity, ManyToOne } from 'typeorm'
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { CoreEntity } from '../../common/entities/core.entity'
 import { CategoryEntity } from './category.entity'
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator'
 import { UserEntity } from '../../auth/entities/user.entity'
 import { ApiProperty } from '@nestjs/swagger'
+import { CommentEntity } from '../../comment/entities/comment.entity'
 
 @Entity({ name: 'ITEM' })
 export class ItemEntity extends CoreEntity {
@@ -66,4 +67,7 @@ export class ItemEntity extends CoreEntity {
     eager: true,
   })
   owner: UserEntity
+
+  @OneToMany(() => CommentEntity, (comment) => comment.item)
+  comments: CommentEntity[]
 }
