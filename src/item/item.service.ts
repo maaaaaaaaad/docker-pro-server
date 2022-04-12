@@ -12,6 +12,7 @@ import { CategoriesGetOutputDto } from './dtos/categories.get.dto'
 import { ItemsGetInputDto } from './dtos/items.get.dto'
 import { ItemUpdateInputDto } from './dtos/item.update.dto'
 import { ItemDeleteInputDto } from './dtos/item.delete.dto'
+import { ItemGetInputDto } from './dtos/item.get.dto'
 
 @Injectable()
 export class ItemService {
@@ -140,6 +141,29 @@ export class ItemService {
         items,
         pageCount: Math.ceil(itemCount / size),
         itemCount,
+      }
+    } catch (e) {
+      throw new InternalServerErrorException(e.message)
+    }
+  }
+
+  async item({ pk }: ItemGetInputDto) {
+    try {
+      const item = await this.itemEntity.findOne({
+        where: {
+          pk,
+        },
+      })
+      if (!item) {
+        return {
+          access: false,
+          message: 'Not found this item',
+        }
+      }
+      return {
+        access: true,
+        message: 'Success',
+        item,
       }
     } catch (e) {
       throw new InternalServerErrorException(e.message)

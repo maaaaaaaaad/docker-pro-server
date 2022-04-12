@@ -32,6 +32,7 @@ import { CategoriesGetOutputDto } from './dtos/categories.get.dto'
 import { ItemsGetInputDto } from './dtos/items.get.dto'
 import { ItemUpdateInputDto } from './dtos/item.update.dto'
 import { ItemDeleteInputDto } from './dtos/item.delete.dto'
+import { ItemGetInputDto } from './dtos/item.get.dto'
 
 @Controller('item')
 @ApiTags('item')
@@ -95,6 +96,12 @@ export class ItemController {
   })
   async items(@Query() itemsGetInputDto: ItemsGetInputDto) {
     return await this.itemService.items(itemsGetInputDto)
+  }
+
+  @Get('one')
+  @ApiOperation({ summary: 'Get item' })
+  async item(@Query() itemGetInputDto: ItemGetInputDto) {
+    return await this.itemService.item(itemGetInputDto)
   }
 
   @Get('categories')
