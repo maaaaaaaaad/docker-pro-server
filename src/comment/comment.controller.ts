@@ -12,6 +12,7 @@ import { User } from '../common/decorators/user.decorator'
 import { UserEntity } from '../auth/entities/user.entity'
 import { CommentService } from './comment.service'
 import { CommentsGetInputDto } from './dtos/comments.get.dto'
+import { CommentsMyInputDto } from './dtos/comments.my.dto'
 
 @Controller('comment')
 @ApiTags('comment')
@@ -36,5 +37,16 @@ export class CommentController {
   })
   async getAll(@Query() commentsGetInputDto: CommentsGetInputDto) {
     return await this.commentService.getAll(commentsGetInputDto)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('access-token')
+  @Get('my')
+  @ApiOperation({ summary: 'Get my comments' })
+  async getMy(
+    @Query() commentsMyInputDto: CommentsMyInputDto,
+    @User() user: UserEntity,
+  ) {
+    return await this.commentService.getMy(user, commentsMyInputDto)
   }
 }
