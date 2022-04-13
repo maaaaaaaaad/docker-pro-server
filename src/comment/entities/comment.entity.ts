@@ -27,7 +27,6 @@ export class CommentEntity extends CoreEntity {
 
   @RelationId((comment: CommentEntity) => comment.owner)
   @ApiProperty({
-    name: 'ItemPK',
     description: 'Owner primary key',
     type: Number,
     nullable: false,
